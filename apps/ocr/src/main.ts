@@ -1,11 +1,4 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
-
 import { NestFactory } from '@nestjs/core';
-
 import { AppModule } from './app/app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
@@ -14,9 +7,13 @@ async function bootstrap() {
     AppModule,
     {
       transport: Transport.TCP,
+      options: {
+        host: '0.0.0.0',
+        port: 3001,
+      },
     }
   );
-  await app.listen();
+  app.listen();
 }
 
 bootstrap();

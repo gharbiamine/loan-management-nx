@@ -1,6 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 
 import { AppService } from './app.service';
+import { EventPattern } from '@nestjs/microservices';
+import { SubmitDataEvent } from './events/submit-data.event';
 
 @Controller()
 export class AppController {
@@ -9,5 +11,11 @@ export class AppController {
   @Get()
   getData() {
     return this.appService.getData();
+  }
+
+  @EventPattern('submit_data')
+  handleSubmitData(data: SubmitDataEvent) {
+    console.log('triggered');
+    this.appService.handleSubmitData(data);
   }
 }
