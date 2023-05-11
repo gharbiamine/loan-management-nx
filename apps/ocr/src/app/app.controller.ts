@@ -1,6 +1,6 @@
 import { BadRequestException, Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { EventPattern } from '@nestjs/microservices';
+import { ClientProxy, EventPattern } from '@nestjs/microservices';
 import { SubmitDataEvent } from './events/submit-data.event';
 import { HttpService } from '@nestjs/axios';
 import { catchError } from 'rxjs';
@@ -11,7 +11,8 @@ import Express from 'express';
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
+    private readonly orchestrator: ClientProxy
   ) {}
 
   @Get()
@@ -38,6 +39,7 @@ export class AppController {
         textContent = res.data.ParsedResults[0];
       });
     console.log(textContent);
+    this.orchestrator.emit('decoded_image', textContent);
     this.appService.handleSubmitData(data);
   }
 }
