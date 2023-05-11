@@ -5,7 +5,10 @@ import { SubmitDataEvent } from './events/submit-data.event';
 
 @Injectable()
 export class AppService {
-  constructor(@Inject('OCR') private readonly ocrClient: ClientProxy) {}
+  constructor(
+    @Inject('OCR') private readonly ocrClient: ClientProxy,
+    @Inject('CREDIT') private readonly creditClient: ClientProxy
+  ) {}
   private readonly sampleData: string[] = [];
   getData(): { message: string } {
     return { message: 'Hello API' };
@@ -14,5 +17,6 @@ export class AppService {
     this.sampleData.push(data.data);
     console.log(this.sampleData);
     this.ocrClient.emit('submit_data', new SubmitDataEvent(data.data));
+    this.creditClient.emit('submit_data', new SubmitDataEvent(data.data));
   }
 }
