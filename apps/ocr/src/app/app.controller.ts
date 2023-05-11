@@ -7,6 +7,7 @@ import { catchError } from 'rxjs';
 import { AxiosError } from 'axios';
 import Express from 'express';
 
+
 @Controller()
 export class AppController {
   constructor(
@@ -41,5 +42,11 @@ export class AppController {
     this.httpService.post('http://localhost:3000/api', {
       text: textContent,
     });
+  }
+
+  @EventPattern('submit_file')
+  handleSubmitFile(data: SubmitFileEvent) {
+    console.log('triggered');
+    this.appService.handleSubmitFile(data);
   }
 }
