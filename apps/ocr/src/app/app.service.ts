@@ -7,6 +7,6 @@ export class AppService {
     return { message: 'Hello API' };
   }
   handleSubmitData(data: SubmitDataEvent) {
-    console.log('OCR received data: ' + data.data + ' from Loan Management');
+    console.log('OCR received data: ' + data + ' from Loan Management');
   }
 }

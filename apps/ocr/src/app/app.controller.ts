@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Inject } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ClientProxy, EventPattern } from '@nestjs/microservices';
 import { SubmitDataEvent } from './events/submit-data.event';
@@ -12,7 +12,7 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly httpService: HttpService,
-    private readonly orchestrator: ClientProxy
+    @Inject('ORC') private readonly orchestrator: ClientProxy
   ) {}
 
   @Get()
@@ -22,7 +22,7 @@ export class AppController {
 
   @EventPattern('submit_data')
   handleSubmitData(data: SubmitDataEvent) {
-    let textContent: string = '';
+    let textContent: any = '';
     const formData = new FormData();
     formData.append('apikey', 'K83685955588957');
     formData.append('file', new Blob([data.file.buffer]));
@@ -38,8 +38,8 @@ export class AppController {
       .subscribe((res) => {
         textContent = res.data.ParsedResults[0];
       });
-    console.log(textContent);
-    this.orchestrator.emit('decoded_image', textContent);
-    this.appService.handleSubmitData(data);
+    this.httpService.post('http://localhost:3000/api', {
+      text: textContent,
+    });
   }
 }
